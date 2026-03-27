@@ -1,24 +1,43 @@
-import { useReducer, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 enum Operators {
-    add,
-    subtract,
-    multiply,
-    divide,
+    add = "+",
+    subtract = "-",
+    multiply = "x",
+    divide = "/",
 }
 
 
 export const useCalculator = () => {
 
+    const [formula, setFormula] = useState("");
     const [number, setNumber] = useState("0")
     const [previosNumber, setPreviosNumber] = useState("0")
 
-    const lastOperation = useRef<Operators>(null);
+    const lastOperation = useRef<Operators | undefined>(null);
+
+    useEffect(() => {
+
+        if (lastOperation.current) {
+            const firstFormula = formula.split(" ").at(0);
+            setFormula(`${firstFormula} ${lastOperation.current} ${number}`)
+        } else {
+            setFormula(number);
+        }
+
+    }, [number]);
+
+    useEffect(() => {
+        const subResult = claculateSubResult();
+        setPreviosNumber(`${subResult}`);
+    }, [formula])
 
 
     const clean = () => {
         setNumber("0");
         setPreviosNumber("0");
+        lastOperation.current = undefined;
+        setFormula("");
     }
 
     const deleteLastChart = () => {
@@ -73,6 +92,7 @@ export const useCalculator = () => {
     }
 
     const setLastNumber = () => {
+        calculateResult();
         if (number.endsWith(".")) {
             setPreviosNumber(number.slice(0, -1));
         } else {
@@ -101,34 +121,47 @@ export const useCalculator = () => {
     }
 
     const calculateResult = () => {
-        const num1 = Number(number);
-        const num2 = Number(previosNumber);
 
-        switch (lastOperation.current) {
+        const result = claculateSubResult();
+        setFormula(`${result}`)
+        lastOperation.current = undefined;
+        setPreviosNumber("0")
+    }
+
+    const claculateSubResult = ():number => {
+
+        const [value1, operation, value2] = formula.split(" ");
+        const num1 = Number(value1);
+        const num2 = Number(value1);
+
+        if (isNaN(num2)) return num1;
+
+        switch (operation) {
 
             case Operators.add:
-                setNumber(`${num1 + num2}`);
+                return num1 + num2;
                 break;
             case Operators.subtract:
-                setNumber(`${num2 - num1}`);
+                return num1 - num2
                 break;
             case Operators.divide:
-                setNumber(`${num1 / num2}`);
+                return num1 / num2
                 break;
             case Operators.multiply:
-                setNumber(`${num2 * num1}`);
+                return num1 * num2
                 break;
 
             default:
                 throw new Error("No Operation");
         }
-        setPreviosNumber("0");
+        
     }
 
     return {
         //Propiedades
         number,
         previosNumber,
+        formula,
 
         //Metodos
         buildNumber,

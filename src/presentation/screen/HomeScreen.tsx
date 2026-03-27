@@ -9,6 +9,7 @@ export const HomeScreen = () => {
   const {
     number,
     previosNumber,
+    formula,
     buildNumber,
     clean,
     deleteLastChart,
@@ -23,14 +24,24 @@ export const HomeScreen = () => {
 
   return (
     <View style={styles.calculatorContainer}>
-      <Text adjustsFontSizeToFit numberOfLines={1} style={styles.mainResult}>{number}</Text>
-      <Text adjustsFontSizeToFit numberOfLines={1} style={styles.subResult}>
-        {(previosNumber === "0") ? "" : previosNumber}
 
-
-
-
+      <Text 
+        adjustsFontSizeToFit 
+        numberOfLines={1} 
+        style={styles.mainResult}
+      >
+        {formula}
       </Text>
+
+      <Text 
+        adjustsFontSizeToFit
+        numberOfLines={1}
+        style={styles.subResult}
+      >
+        {(previosNumber === "0") ? "" : previosNumber}
+      </Text>
+
+
       <View style={styles.row}>
         <CalculatorButton onPress={() => clean()} label="C" color={colors.lightGray} blakText />
         <CalculatorButton onPress={() => toggleSing()} label="+/-" color={colors.lightGray} blakText />
