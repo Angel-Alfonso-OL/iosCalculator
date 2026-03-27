@@ -14,7 +14,7 @@ export const useCalculator = () => {
     const [number, setNumber] = useState("0")
     const [previosNumber, setPreviosNumber] = useState("0")
 
-    const lastOperation = useRef<Operators | undefined>(null);
+    const lastOperation = useRef<Operators | undefined>(undefined);
 
     useEffect(() => {
 
@@ -29,7 +29,7 @@ export const useCalculator = () => {
 
     useEffect(() => {
         const subResult = claculateSubResult();
-        setPreviosNumber(`${subResult}`);
+        setPreviosNumber(`${ subResult }`);
     }, [formula])
 
 
@@ -48,9 +48,9 @@ export const useCalculator = () => {
 
         if (number.length > 1) {
             setNumber(number.substring(0, number.length - 1));
-        } else {
-            setNumber("0");
         }
+            setNumber("0");
+        
 
     }
 
@@ -132,7 +132,7 @@ export const useCalculator = () => {
 
         const [value1, operation, value2] = formula.split(" ");
         const num1 = Number(value1);
-        const num2 = Number(value1);
+        const num2 = Number(value2);
 
         if (isNaN(num2)) return num1;
 
